@@ -10,7 +10,9 @@ const DIRECTIONS = {
 const CELL_TYPE = {
   EMPTY: 'black',
   SNAKE: 'white',
-  FOOD: 'red'
+  HEAD: 'green',
+  FOOD: 'red',
+  WALL: 'gray'
 }
 
 /*export default {

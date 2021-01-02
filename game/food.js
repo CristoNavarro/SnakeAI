@@ -8,7 +8,7 @@ class Food {
   }
 
   get currentPos() {
-    this._currentPos;
+    return this._currentPos;
   }
 
   get x() {
@@ -19,19 +19,17 @@ class Food {
     return this._currentPos.y;
   }
 
-  isOnSnake(snake, newPoint) {
-    const snakeBody = snake.body;
-    for(const point of snakeBody) {
-      if(newPoint.equals(point)) {
+  onWall(point) {
+    if(point.x === 0 || point.x === this._maxXPosition - 1 ||
+      point.y === 0 || point.y === this._maxYPosition - 1) {
         return true;
-      }
     }
     return false;
   }
 
   selectNewPosition(snake) {
     let newPoint = new Point(this._maxXPosition, this._maxYPosition, true);
-    while(this.isOnSnake(snake, newPoint)) {
+    while(snake.insideBody(newPoint) || this.onWall(newPoint)) {
       newPoint = new Point(this._maxXPosition, this._maxYPosition, true);
     }
     this._currentPos = newPoint;

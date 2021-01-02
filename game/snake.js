@@ -8,6 +8,7 @@ class Snake {
     this._body = [initialPoint];
     this._remainingIncrease = 0;
     this._increaseSize = increaseSize;
+    this._nextPoint;
   }
 
   get head() {
@@ -18,23 +19,26 @@ class Snake {
     return this._body;
   }
 
-  move(direction, grow) {
-    let newPoint;
+  predictMovement(direction) {
     switch(direction) {
       case DIRECTIONS.NORTH:
-        newPoint = new Point(this.head.x, this.head.y - 1);
+        this._nextPoint = new Point(this.head.x, this.head.y - 1);
         break;
       case DIRECTIONS.SOUTH:
-        newPoint = new Point(this.head.x, this.head.y + 1);
+        this._nextPoint = new Point(this.head.x, this.head.y + 1);
         break;
       case DIRECTIONS.EAST:
-        newPoint = new Point(this.head.x + 1, this.head.y);
+        this._nextPoint = new Point(this.head.x + 1, this.head.y);
         break;
       case DIRECTIONS.WEST:
-        newPoint = new Point(this.head.x - 1, this.head.y);
+        this._nextPoint = new Point(this.head.x - 1, this.head.y);
         break;
     }
-    this.body.unshift(newPoint);
+    return this._nextPoint;
+  }
+
+  move(grow) {
+    this.body.unshift(this._nextPoint);
     if (grow) {
       this._remainingIncrease += this._increaseSize;
     }
@@ -43,5 +47,14 @@ class Snake {
     } else {
       this.body.pop();
     }
+  }
+
+  insideBody(point) {
+    for (let bodyPart of this._body) {
+      if (point.equals(bodyPart)) {
+        return true;
+      }
+    }
+    return false;
   }
 }
