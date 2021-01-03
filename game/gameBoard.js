@@ -78,7 +78,6 @@ class GameBoard {
 
   getStatus() {
     let originPoint = this._head;
-    console.log(originPoint);
     let result = {
       horizontalDistanceToFood: 0,
       verticalDistanceToFood: 0,
