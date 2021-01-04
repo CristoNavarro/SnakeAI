@@ -30,7 +30,7 @@ class NeuralNetwork {
     });
   }
   
-  mutate(rate) {
+  mutate(rate = 0.1) {
     tf.tidy(() => {
       const weights = this._model.getWeights();
       const mutatedWeights = [];
@@ -39,7 +39,7 @@ class NeuralNetwork {
         let shape = weight.shape;
         let tensorData = tensor.dataSync().slice();
         for (let value of tensorData) {
-          if (RandomSource(1) < rate) {
+          if (Math.random() < rate) {
             value = value + randomGaussian();
           }
         }
@@ -70,7 +70,7 @@ class NeuralNetwork {
         newWeights.push(newTensor);
       }
       newModel.setWeights(newWeights);
-      return newModel;
+      return new NeuralNetwork(this._inputNodes, this._hiddenNodes, this._outputNodes, newModel);
     });
   }
 
@@ -90,16 +90,31 @@ class NeuralNetwork {
   createModel() {
     const model = tf.sequential();
     const hiddenLayer = tf.layers.dense({
-      units: this._hiddenNodes,
+      units: this._hiddenNodes[0],
       inputShape: [this._inputNodes],
       activation: 'sigmoid'
     });
     model.add(hiddenLayer);
+    for (let i = 1; i < this._hiddenNodes.length; i++) {
+      const hiddenLayer = tf.layers.dense({
+        units: this._hiddenNodes[i],
+        inputShape: [this._hiddenNodes[i - 1]],
+        activation: 'sigmoid'
+      });
+      model.add(hiddenLayer);
+    }
     const outputLayer = tf.layers.dense({
       units: this._outputNodes,
       activation: 'softmax'
     });
     model.add(outputLayer);
     return model;
+  }
+
+  show() {
+    console.log(this._model.getWeights()[0].dataSync());
+    /*for (let weight of this._model.getWeights()) {
+      console.log(weight.dataSync());
+    }*/
   }
 }

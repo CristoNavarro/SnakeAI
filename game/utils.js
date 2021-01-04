@@ -24,16 +24,26 @@ function wait(seconds) {
   } while(newDate - date < miliseconds);
 }
 
-function indexOfMax(arr) {
+function indexOfMax(arr, cantBe = -1) {
   if (arr.length === 0) {
     return -1;
   }
-  let max = arr[0];
+  let max = -Infinity;
   let maxIndex = 0;
-  for (let i = 1; i < arr.length; i++) {
-    if (arr[i] > max) {
-      maxIndex = i;
-      max = arr[i];
+  if (cantBe === - 1) {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] > max && arr[i]) {
+        maxIndex = i;
+        max = arr[i];
+      }
+    }
+  }
+  else {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] > max && i !== cantBe) {
+        maxIndex = i;
+        max = arr[i];
+      }
     }
   }
   return maxIndex;

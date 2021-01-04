@@ -15,6 +15,7 @@ class Snake {
     this._alive = true;
     this._maxIterationsWithoutFood = maxIterationsWithoutFood;
     this._movementsRecord = [];
+    this._cantMoveTo = undefined;
   }
 
   get head() {
@@ -27,6 +28,10 @@ class Snake {
 
   get score() {
     return this._score;
+  }
+
+  get cantMoveTo() {
+    return this._cantMoveTo;
   }
   
   get iterationsNoFood() {
@@ -64,15 +69,19 @@ class Snake {
   predictMovement(direction) {
     switch(direction) {
       case DIRECTIONS.NORTH:
+        this._cantMoveTo = DIRECTIONS.SOUTH;
         this._nextPoint = new Point(this.head.x, this.head.y - 1);
         break;
       case DIRECTIONS.SOUTH:
+        this._cantMoveTo = DIRECTIONS.NORTH;
         this._nextPoint = new Point(this.head.x, this.head.y + 1);
         break;
       case DIRECTIONS.EAST:
+        this._cantMoveTo = DIRECTIONS.WEST;
         this._nextPoint = new Point(this.head.x + 1, this.head.y);
         break;
       case DIRECTIONS.WEST:
+        this._cantMoveTo = DIRECTIONS.EAST;
         this._nextPoint = new Point(this.head.x - 1, this.head.y);
         break;
     }
@@ -88,7 +97,7 @@ class Snake {
       this._iterationsNoFood = 0;
     } else {
       if (this._iterationsNoFood >= this._maxIterationsWithoutFood) {
-        console.log("he muerto de hambre");
+        //console.log("he muerto de hambre");
         this._alive = false;
       }
     }
