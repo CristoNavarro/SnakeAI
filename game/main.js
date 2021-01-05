@@ -9,18 +9,19 @@ let bestSnake;
 let currentSnake;
 let moveIndex = 0;
 let stop = false;
-const GENERATIONS_TO_SHOW = 10;
+const GENERATIONS_TO_SHOW = 5;
 
 function setup() {
   const canvasWidth = 900;
-  const canvasHeight = 900;
-  const cellsPerRow = 12;
-  const cellsPerCol = 12;
-  frameRate(50);
+  const canvasHeight = 900; 
+  const cellsPerRow = 20;
+  const cellsPerCol = 20;
+  frameRate(60);
+  tf.setBackend('cpu');
   createCanvas(canvasWidth, canvasHeight);
   background('black');
   game = new GameController(cellsPerRow, cellsPerCol, canvasWidth, canvasHeight);
-  game.configureStart(200, [18, 18], 1.5, 0.2);
+  game.configureStart(200, [18, 18], 1.5, 0.3);
   //game.gameCicle();
 }
 
@@ -31,11 +32,14 @@ function draw() {
     currentSnake = new Snake(bestSnake.initialPoint, bestSnake.increaseSize, bestSnake.maxIterationsWithoutFood);
     moveIndex = 0;
     console.log(game.currentGeneration);
+    //console.log("EMPIEZO A MOSTRAR");
   } else {
     if (currentSnake.alive) {
+      
       let currentMove = bestSnake.movements[moveIndex];
-      game.draw(currentSnake, currentMove.food);
       game.moveSnake(currentSnake, currentMove.direction, currentMove.food);
+      game.draw(currentSnake, currentMove.food);
+      //console.log(currentSnake._muertoHambre);
       //console.log(game._getInput(currentSnake, currentMove.food));
       moveIndex++;
     } else {

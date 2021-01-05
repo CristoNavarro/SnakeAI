@@ -90,20 +90,78 @@ class GameBoard {
     for (let direction of LOOK_DIRECTIONS) {
       result = result.concat(this.lookInDirection(...direction));
     }
-    return result;
+    return result;/*
+    let originPoint = this._head;
+    let result = {
+      horizontalDistanceToFood: 0,
+      verticalDistanceToFood: 0,
+      leftDistanceToObstacle: 0,
+      rightDistanceToObstacle: 0,
+      upperDistanceToObstacle: 0,
+      lowerDistanceToObstacle: 0
+    }
+    // Food
+    result.horizontalDistanceToFood = originPoint.x - this._food.x;
+    result.verticalDistanceToFood = originPoint.y - this._food.y;
+
+    // Left distance
+    for (let i = originPoint.x - 1; i >= 0; i--) { // End on 1 cos first col (0) is WALL
+      let value = this.board[i][originPoint.y];
+      if (value === CELL_TYPE.SNAKE || value === CELL_TYPE.WALL) {
+        result.leftDistanceToObstacle = originPoint.x - i;
+        break;
+      }
+    }
+
+    // Right distance
+    for (let i = originPoint.x + 1; i < this.board[originPoint.x].length; i++) {
+      let value = this.board[i][originPoint.y];
+      if (value === CELL_TYPE.SNAKE || value === CELL_TYPE.WALL) {
+        result.rightDistanceToObstacle = i - originPoint.x;
+        break;
+      }
+    }
+
+    // Upper Distance
+    for (let j = originPoint.y - 1; j >= 0; j--) {
+      let value = this.board[originPoint.x][j];
+      if (value === CELL_TYPE.SNAKE || value === CELL_TYPE.WALL) {
+        result.upperDistanceToObstacle = originPoint.y - j;
+        break;
+      }
+    }
+
+    // Lower Distance
+    for (let j = originPoint.y + 1; j < this.board.length; j++) {
+      let value = this.board[originPoint.x][j];
+      if (value === CELL_TYPE.SNAKE || value === CELL_TYPE.WALL) {
+        result.lowerDistanceToObstacle = j - originPoint.y;
+        break;
+      } 
+    }
+    return result;*/
   }
 
   lookInDirection(horizontal, vertical) {
     let result = [0, 0, 0]; //{food: 0, body: 0, wall: 0}
+    //let result = [0];
     let i = this._head.x + horizontal;
     let j = this._head.y + vertical;
     let distance = 1;
+    /*if (this.board[i][j] === CELL_TYPE.SNAKE || this.board[i][j] === CELL_TYPE.WALL) {
+      result[1] = 1;
+    }*/
     let value;
     let bodyFound = false;
     let foodFound = false;
+    let dangerFound = false;
     do {
       value = this.board[i][j];
       if (!bodyFound && value === CELL_TYPE.SNAKE) {
+        /*if (!dangerFound && distance === 1) {
+          dangerFound = true;
+          result[3] = 1;
+        }*/
         bodyFound = true;
         result[1] = 1;
       }
@@ -115,8 +173,11 @@ class GameBoard {
       j += vertical;
       distance++;
     } while(value !== CELL_TYPE.WALL);
+    /*if (!dangerFound && distance === 1) {
+      dangerFound = true;
+      result[3] = 1;
+    }*/
     result[2] = 1 / distance;
     return result;
   }
-
 };

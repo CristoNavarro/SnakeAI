@@ -10,12 +10,14 @@ class Snake {
     this._remainingIncrease = 0;
     this._increaseSize = increaseSize;
     this._nextPoint;
-    this._score = 0;
+    this._score = 1;
     this._iterationsNoFood = 0;
     this._alive = true;
     this._maxIterationsWithoutFood = maxIterationsWithoutFood;
     this._movementsRecord = [];
     this._cantMoveTo = undefined;
+    this._initialMoves();
+    this._muertoHambre = false;
   }
 
   get head() {
@@ -98,6 +100,7 @@ class Snake {
     } else {
       if (this._iterationsNoFood >= this._maxIterationsWithoutFood) {
         //console.log("he muerto de hambre");
+        this._muertoHambre = true;
         this._alive = false;
       }
     }
@@ -105,6 +108,32 @@ class Snake {
       this._remainingIncrease--;
     } else {
       this.body.pop();
+    }
+  }
+
+  compare(otherSnake) {
+    let myFitness = this._calculateFitness();
+    let otherFitness = otherSnake._calculateFitness();
+    if (myFitness > otherFitness) {
+      return 1;
+    } else if (myFitness === otherFitness) {
+      return 0;
+    }
+    return -1;
+  }
+
+  _initialMoves() {
+    this.predictMovement(DIRECTIONS.WEST);
+    this.move(true);
+    this.predictMovement(DIRECTIONS.WEST);
+    this.move(true);
+  }
+
+  _calculateFitness() {
+    if (this.score < 10) {
+      return this.iterationsAlive * Math.pow(2, this.score);
+    } else {
+      return this.iterationsAlive * Math.pow(2, 10) * (this.score - 9);
     }
   }
 

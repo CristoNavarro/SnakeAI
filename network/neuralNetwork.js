@@ -30,7 +30,7 @@ class NeuralNetwork {
     });
   }
   
-  mutate(rate = 0.1) {
+  mutate(rate = 0.2) {
     tf.tidy(() => {
       const weights = this._model.getWeights();
       const mutatedWeights = [];
@@ -40,7 +40,13 @@ class NeuralNetwork {
         let tensorData = tensor.dataSync().slice();
         for (let value of tensorData) {
           if (Math.random() < rate) {
-            value = value + randomGaussian();
+            value = value + randomGaussian() / 5;
+            if (value > 1) {
+              value = 1;
+            }
+            if (value < -1) {
+              value = -1;
+            }
           }
         }
         let newTensor = tf.tensor(tensorData, shape);
@@ -63,9 +69,16 @@ class NeuralNetwork {
         let myTensorData = myTensor.dataSync();
         let otherTensorData = mateTensor.dataSync();
         let newValues = [];
-        for (let j = 0; j < myTensorData.length; j++) {
-          newValues.push((myTensorData[j] + otherTensorData[j]) / 2);
+        let randomIndex = Math.random() * myTensorData.length;
+        for (let j = 0; j < randomIndex - 1; j++) {
+          newValues.push(myTensorData[j]);
         }
+        for (let j = randomIndex; j < otherTensorData.length; j++) {
+          newValues.push(otherTensorData[j]);
+        }
+        /*for (let j = 0; j < myTensorData.length; j++) {
+          newValues.push((myTensorData[j] + otherTensorData[j]) / 2);
+        }*/
         let newTensor = tf.tensor(newValues, shape);
         newWeights.push(newTensor);
       }
@@ -92,14 +105,14 @@ class NeuralNetwork {
     const hiddenLayer = tf.layers.dense({
       units: this._hiddenNodes[0],
       inputShape: [this._inputNodes],
-      activation: 'sigmoid'
+      activation: 'linear'
     });
     model.add(hiddenLayer);
     for (let i = 1; i < this._hiddenNodes.length; i++) {
       const hiddenLayer = tf.layers.dense({
         units: this._hiddenNodes[i],
         inputShape: [this._hiddenNodes[i - 1]],
-        activation: 'sigmoid'
+        activation: 'linear'
       });
       model.add(hiddenLayer);
     }

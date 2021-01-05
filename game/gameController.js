@@ -15,14 +15,15 @@ class GameController {
     this._gameBoard = new GameBoard(cellsPerRow, cellsPerCol, canvasWidth, canvasHeight);
     this._firstGenerationCreated = false;
     this._ordered = false;
-    this._maxIterationsPerSnake = this._cellsPerCol + this._cellsPerRow;
+    this._maxIterationsPerSnake = this._cellsPerCol * this._cellsPerRow / 4;
   }
 
   get currentGeneration() {
     return this._currentGeneration;
   }
 
-  configureStart(snakePopulation = 10, hiddenLayersNodes = [8], selectivePreassure = 1.5, numberOfPairs = 0.2) {
+  configureStart(snakePopulation = 10, hiddenLayersNodes = [8], selectivePreassure = 1.5, numberOfPairs = 0.2, mutationRate = 0.2) {
+    this._mutationRate = mutationRate
     const INPUTS_AMOUNT = 24;
     const OUTPUT_AMOUNT = 4;
     this._population = [];
@@ -36,10 +37,6 @@ class GameController {
     }
     this._createProbabilities(selectivePreassure);
     this._currentGeneration = 1;
-  }
-
-  get currentGeneration() {
-    return this._currentGeneration;
   }
 
   gameCicle() {
@@ -77,16 +74,18 @@ class GameController {
       // Ordenar
       this._currentGeneration++;
       this._orderGeneration();
-      //console.log("motrando ordenado");
-      //for (let population of this._population) {
-        //console.log(`${population.snake.score} points and ${population.snake.iterationsAlive} time`);
-      //}
+      /*console.log("motrando ordenado");
+      for (let population of this._population) {
+        console.log(`${population.snake.score} points and ${population.snake.iterationsAlive} time`);
+      }*/
       // Seleccionar parejas
       let pairs = this._selectParents();
-      // Generar y mutar hijos
+      // Generar hijos
       let offspring = this._createOffspring(pairs);
       // Reemplazo en la poblacion
       this._replaceWorstIndividuals(offspring);
+      // Mutar poblacion
+      this._mutatePopulation();
       this._resetIndividuals();
       this._evaluateGeneration();
       this._ordered = false;
@@ -133,44 +132,51 @@ class GameController {
   getBestSnake() {
     this._orderGeneration();
     return this._population[this._population.length - 1].snake;
+    //return this._population[0].snake;
   }
 
   _getInput(snake, food) {
     this._gameBoard.reset();
     this._gameBoard.setCurrentStatus(snake, food);
     let result = this._gameBoard.getStatus();
-    return result;
+    return Object.values(result);
   }
 
   _predictionToDirection(prediction, snake) {
-    let indexOfPrediction = indexOfMax(prediction);
-    if (Object.values(DIRECTIONS)[indexOfPrediction] === snake.cantMoveTo) {
+    let cantMoveTo = [];
+    let indexOfPrediction = indexOfMax(prediction, cantMoveTo);
+    cantMoveTo.push(indexOfPrediction);
+    //let cantMoveTo = [];
+    /*for (let direction of snake.cantMoveTo) {
+      if (Object.values(DIRECTIONS)[indexOfPrediction] === direction) {
+        indexOfPrediction = indexOfMax(prediction, indexOfPrediction);
+      }
+    }*/
+    /*if (Object.values(DIRECTIONS)[indexOfPrediction] === snake.cantMoveTo) {
       indexOfPrediction = indexOfMax(prediction, indexOfPrediction);
+    }*/
+    let iter = 0;
+    let nextPoint = snake.predictMovement(Object.values(DIRECTIONS)[indexOfPrediction]);
+    while (iter < 3 && (this._gameBoard.board[nextPoint.x][nextPoint.y] === CELL_TYPE.SNAKE || this._gameBoard.board[nextPoint.x][nextPoint.y] === CELL_TYPE.WALL)) {
+      indexOfPrediction = indexOfMax(prediction, cantMoveTo);
+      nextPoint = snake.predictMovement(Object.values(DIRECTIONS)[indexOfPrediction]);
+      cantMoveTo.push(indexOfPrediction);
+      iter++;
     }
+    /*console.log('---');
+    console.log(cantMoveTo);
+    console.log(indexOfPrediction);
+    console.log('---');*/
     return Object.values(DIRECTIONS)[indexOfPrediction];
-
-    /**switch(indexOfPrediction) {
-      case 0:
-        return DIRECTIONS.NORTH;
-        break;
-      case 1:
-        return DIRECTIONS.WEST;
-        break;
-      case 2:
-        return DIRECTIONS.EAST;
-        break;
-      case 3:
-        return DIRECTIONS.SOUTH;
-        break;
-    }
-    return false;*/
   }
 
   _orderGeneration() {
     if (!this._ordered) {
       this._ordered = true;
       this._population.sort((a, b) => {
-        if (a.snake.score > b.snake.score) {
+        return a.snake.compare(b.snake);
+      });
+        /*if (a.snake.score > b.snake.score) {
           return 1;
         }
         if (a.snake.score < b.snake.score) {
@@ -183,7 +189,7 @@ class GameController {
           return -1;
         }
         return 0;
-      });
+      });*/
     }
   }
 
@@ -216,12 +222,18 @@ class GameController {
     let offspring = [];
     for (let pair of parents) {
       let childBrain = this._population[pair[0]].brain.breed(this._population[pair[1]].brain);
-      childBrain.mutate();
+      //childBrain.mutate();
       let childSnake = new Snake(this._initialPos, this._growthByFood, this._maxIterationsPerSnake);
       let childFood = new Food(this._cellsPerCol, this._cellsPerRow, childSnake);
       offspring.push({snake: childSnake, food: childFood, brain: childBrain});
     }
     return offspring;
+  }
+
+  _mutatePopulation() {
+    for (let i = 0; i < this._population.length - 1; i++) {
+      this._population[i].brain.mutate(this._mutationRate);
+    }
   }
 
   _replaceWorstIndividuals(offspring) {
@@ -250,10 +262,12 @@ class GameController {
       individual.food = new Food(this._cellsPerCol, this._cellsPerRow, snake);
     } else if (snake.insideBody(nextPoint)) {
       //console.log("Game Over");
+      //snake._score = snake.score - 0.5; 
       snake.alive = false;
     } else if (this._gameBoard.onWall(nextPoint)) {
       //console.log("Wall");
       snake.alive = false;
+      //snake._score = snake.score - 0.5; 
     } else {
       snake.move(snakeGrows);
     }

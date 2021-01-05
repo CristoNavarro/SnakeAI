@@ -24,13 +24,13 @@ function wait(seconds) {
   } while(newDate - date < miliseconds);
 }
 
-function indexOfMax(arr, cantBe = -1) {
+function indexOfMax(arr, cantBe = [-1]) {
   if (arr.length === 0) {
     return -1;
   }
   let max = -Infinity;
   let maxIndex = 0;
-  if (cantBe === - 1) {
+  if (cantBe.length && cantBe[0] === - 1) {
     for (let i = 0; i < arr.length; i++) {
       if (arr[i] > max && arr[i]) {
         maxIndex = i;
@@ -40,9 +40,16 @@ function indexOfMax(arr, cantBe = -1) {
   }
   else {
     for (let i = 0; i < arr.length; i++) {
-      if (arr[i] > max && i !== cantBe) {
-        maxIndex = i;
-        max = arr[i];
+      if (arr[i] > max) {
+        let can = true;
+        for (let j = 0; j < cantBe.length; j++) {
+          if (i == cantBe[j])
+            can = false;
+        }
+        if (can) {
+          maxIndex = i;
+          max = arr[i];
+        }
       }
     }
   }
