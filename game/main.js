@@ -9,19 +9,19 @@ let bestSnake;
 let currentSnake;
 let moveIndex = 0;
 let stop = false;
-const GENERATIONS_TO_SHOW = 5;
+const GENERATIONS_TO_SHOW = 1;
 
 function setup() {
   const canvasWidth = 900;
   const canvasHeight = 900; 
-  const cellsPerRow = 20;
-  const cellsPerCol = 20;
-  frameRate(60);
+  const cellsPerRow = 10;
+  const cellsPerCol = 10;
+  frameRate(20);
   tf.setBackend('cpu');
   createCanvas(canvasWidth, canvasHeight);
   background('black');
   game = new GameController(cellsPerRow, cellsPerCol, canvasWidth, canvasHeight);
-  game.configureStart(200, [18, 18], 1.5, 0.3);
+  game.configureStart(200, [4], 1.9, 0.3, 1);
   //game.gameCicle();
 }
 

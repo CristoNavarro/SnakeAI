@@ -86,7 +86,8 @@ class GameBoard {
     const LEFT_DOWN = [-1, 1];
     const RIGHT_UP = [1, -1];
     const RIGHT_DOWN = [1, 1];
-    const LOOK_DIRECTIONS = [LEFT, RIGHT, UP, DOWN, LEFT_UP, LEFT_DOWN, RIGHT_UP, RIGHT_DOWN];
+    //const LOOK_DIRECTIONS = [LEFT, RIGHT, UP, DOWN, LEFT_UP, LEFT_DOWN, RIGHT_UP, RIGHT_DOWN];
+    const LOOK_DIRECTIONS = [LEFT, UP, RIGHT, DOWN];
     for (let direction of LOOK_DIRECTIONS) {
       result = result.concat(this.lookInDirection(...direction));
     }
@@ -147,37 +148,43 @@ class GameBoard {
     //let result = [0];
     let i = this._head.x + horizontal;
     let j = this._head.y + vertical;
-    let distance = 1;
-    /*if (this.board[i][j] === CELL_TYPE.SNAKE || this.board[i][j] === CELL_TYPE.WALL) {
-      result[1] = 1;
-    }*/
-    let value;
-    let bodyFound = false;
-    let foodFound = false;
-    let dangerFound = false;
-    do {
-      value = this.board[i][j];
-      if (!bodyFound && value === CELL_TYPE.SNAKE) {
-        /*if (!dangerFound && distance === 1) {
-          dangerFound = true;
-          result[3] = 1;
-        }*/
-        bodyFound = true;
-        result[1] = 1;
-      }
-      if (!foodFound && value === CELL_TYPE.FOOD) {
-        foodFound = true;
-        result[0] = 1;
-      }
-      i += horizontal;
-      j += vertical;
-      distance++;
-    } while(value !== CELL_TYPE.WALL);
-    /*if (!dangerFound && distance === 1) {
-      dangerFound = true;
-      result[3] = 1;
-    }*/
-    result[2] = 1 / distance;
-    return result;
+    if (this.board[i][j] === CELL_TYPE.SNAKE || this.board[i][j] === CELL_TYPE.WALL) {
+      return [1]
+    }
+    else {
+      return [0];
+    }
+    //let distance = 1;
+    ///*if (this.board[i][j] === CELL_TYPE.SNAKE || this.board[i][j] === CELL_TYPE.WALL) {
+    //  result[1] = 1;
+    //}*/
+    //let value;
+    //let bodyFound = false;
+    //let foodFound = false;
+    //let dangerFound = false;
+    //do {
+    //  value = this.board[i][j];
+    //  if (!bodyFound && value === CELL_TYPE.SNAKE) {
+    //    /*if (!dangerFound && distance === 1) {
+    //      dangerFound = true;
+    //      result[3] = 1;
+    //    }*/
+    //    bodyFound = true;
+    //    result[1] = 1;
+    //  }
+    //  if (!foodFound && value === CELL_TYPE.FOOD) {
+    //    foodFound = true;
+    //    result[0] = 1;
+    //  }
+    //  i += horizontal;
+    //  j += vertical;
+    //  distance++;
+    //} while(value !== CELL_TYPE.WALL);
+    ///*if (!dangerFound && distance === 1) {
+    //  dangerFound = true;
+    //  result[3] = 1;
+    //}*/
+    //result[2] = 1 / distance;
+    //return result;
   }
 };

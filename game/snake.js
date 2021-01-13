@@ -16,7 +16,7 @@ class Snake {
     this._maxIterationsWithoutFood = maxIterationsWithoutFood;
     this._movementsRecord = [];
     this._cantMoveTo = undefined;
-    this._initialMoves();
+    //this._initialMoves();
     this._muertoHambre = false;
   }
 
@@ -93,6 +93,7 @@ class Snake {
   move(grow) {
     this._iterationsNoFood++;
     this.body.unshift(this._nextPoint);
+    grow = true;
     if (grow) {
       this._remainingIncrease += this._increaseSize;
       this._score++;
@@ -130,11 +131,13 @@ class Snake {
   }
 
   _calculateFitness() {
-    if (this.score < 10) {
+    //return 1 / (this._maxIterationsWithoutFood - this.iterationsAlive) + this.score;
+    /*if (this.score < 10) {
       return this.iterationsAlive * Math.pow(2, this.score);
     } else {
       return this.iterationsAlive * Math.pow(2, 10) * (this.score - 9);
-    }
+    }*/
+    return this.iterationsAlive;
   }
 
   setMovement(direction, food) {

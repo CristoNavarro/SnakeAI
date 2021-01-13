@@ -38,14 +38,16 @@ class NeuralNetwork {
         let tensor = weight;
         let shape = weight.shape;
         let tensorData = tensor.dataSync().slice();
-        for (let value of tensorData) {
+        for (let i = 0; i < tensorData.length; i++) {
           if (Math.random() < rate) {
-            value = value + randomGaussian() / 5;
-            if (value > 1) {
-              value = 1;
+            //console.log(`El primer value = ${value}`);
+            tensorData[i] = tensorData[i] + randomGaussian() / 5;
+            //console.log(`El segundo value = ${value}`);
+            if (tensorData[i] > 1) {
+              tensorData[i] = 1;
             }
-            if (value < -1) {
-              value = -1;
+            if (tensorData[i] < -1) {
+              tensorData[i] = -1;
             }
           }
         }
@@ -70,15 +72,15 @@ class NeuralNetwork {
         let otherTensorData = mateTensor.dataSync();
         let newValues = [];
         let randomIndex = Math.random() * myTensorData.length;
-        for (let j = 0; j < randomIndex - 1; j++) {
+        /*for (let j = 0; j < randomIndex - 1; j++) {
           newValues.push(myTensorData[j]);
         }
         for (let j = randomIndex; j < otherTensorData.length; j++) {
           newValues.push(otherTensorData[j]);
-        }
-        /*for (let j = 0; j < myTensorData.length; j++) {
-          newValues.push((myTensorData[j] + otherTensorData[j]) / 2);
         }*/
+        for (let j = 0; j < myTensorData.length; j++) {
+          newValues.push((myTensorData[j] + otherTensorData[j]) / 2);
+        }
         let newTensor = tf.tensor(newValues, shape);
         newWeights.push(newTensor);
       }
@@ -105,14 +107,14 @@ class NeuralNetwork {
     const hiddenLayer = tf.layers.dense({
       units: this._hiddenNodes[0],
       inputShape: [this._inputNodes],
-      activation: 'linear'
+      activation: 'sigmoid'
     });
     model.add(hiddenLayer);
     for (let i = 1; i < this._hiddenNodes.length; i++) {
       const hiddenLayer = tf.layers.dense({
         units: this._hiddenNodes[i],
         inputShape: [this._hiddenNodes[i - 1]],
-        activation: 'linear'
+        activation: 'sigmoid'
       });
       model.add(hiddenLayer);
     }

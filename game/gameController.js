@@ -24,7 +24,7 @@ class GameController {
 
   configureStart(snakePopulation = 10, hiddenLayersNodes = [8], selectivePreassure = 1.5, numberOfPairs = 0.2, mutationRate = 0.2) {
     this._mutationRate = mutationRate
-    const INPUTS_AMOUNT = 24;
+    const INPUTS_AMOUNT = 4;
     const OUTPUT_AMOUNT = 4;
     this._population = [];
     this._probabilities = [];
@@ -85,7 +85,9 @@ class GameController {
       // Reemplazo en la poblacion
       this._replaceWorstIndividuals(offspring);
       // Mutar poblacion
+      //this._population[0].brain.show();
       this._mutatePopulation();
+      //this._population[0].brain.show();
       this._resetIndividuals();
       this._evaluateGeneration();
       this._ordered = false;
@@ -98,6 +100,7 @@ class GameController {
       let snake = new Snake(this._initialPos, this._growthByFood, this._maxIterationsPerSnake);
       this._population[i].food = food;
       this._population[i].snake = snake;
+      this._population[i].brain = this._population[i].brain.copy();
     }
   }
 
@@ -155,14 +158,14 @@ class GameController {
     /*if (Object.values(DIRECTIONS)[indexOfPrediction] === snake.cantMoveTo) {
       indexOfPrediction = indexOfMax(prediction, indexOfPrediction);
     }*/
-    let iter = 0;
+    /*let iter = 0;
     let nextPoint = snake.predictMovement(Object.values(DIRECTIONS)[indexOfPrediction]);
     while (iter < 3 && (this._gameBoard.board[nextPoint.x][nextPoint.y] === CELL_TYPE.SNAKE || this._gameBoard.board[nextPoint.x][nextPoint.y] === CELL_TYPE.WALL)) {
       indexOfPrediction = indexOfMax(prediction, cantMoveTo);
       nextPoint = snake.predictMovement(Object.values(DIRECTIONS)[indexOfPrediction]);
       cantMoveTo.push(indexOfPrediction);
       iter++;
-    }
+    }*/
     /*console.log('---');
     console.log(cantMoveTo);
     console.log(indexOfPrediction);
@@ -195,17 +198,19 @@ class GameController {
 
   _selectParents() {
     let pairs = [];
-    let alreadySelected = {};
+    let alreadySelected = [];
     let randomNumber;
-    while (pairs.length < this._numberOfPairs) {
-      randomNumber = Math.random() * this._probabilities[this._probabilities.length - 1];
+    while (pairs.length !== this._numberOfPairs) {
+      randomNumber = Math.random();
       let newPair = [];
-      for (let i = 0; i < this._population.length; i++) {
-        if (randomNumber <= this._probabilities[i]) {
+      let i = 0;
+      let j = 0;
+      for (i = 0; i < this._population.length; i++) {
+        if (randomNumber <= this._probabilities[i] && !alreadySelected.includes(i)) {
           newPair.push(i);
           randomNumber = Math.random() * this._probabilities[this._probabilities.length - 1];
-          for (let j = 0; j < this._population.length; j++) {
-            if (randomNumber <= this._probabilities[j]) {
+          for (j = 0; j < this._population.length; j++) {
+            if (randomNumber <= this._probabilities[j] && !alreadySelected.includes(j)) {
               newPair.push(j);
               break;
             }
@@ -213,7 +218,15 @@ class GameController {
           break;
         }
       }
-      pairs.push(newPair);
+      if (newPair.length == 2) {
+        alreadySelected.push(i);
+        alreadySelected.push(j);
+        pairs.push(newPair);
+      }
+    }
+    let sum = 0;
+    for (let elem of pairs) {
+      sum += (elem[0] + elem[1]) / 2
     }
     return pairs;
   }
@@ -221,6 +234,7 @@ class GameController {
   _createOffspring(parents) {
     let offspring = [];
     for (let pair of parents) {
+      //console.log(pair);
       let childBrain = this._population[pair[0]].brain.breed(this._population[pair[1]].brain);
       //childBrain.mutate();
       let childSnake = new Snake(this._initialPos, this._growthByFood, this._maxIterationsPerSnake);
@@ -231,7 +245,8 @@ class GameController {
   }
 
   _mutatePopulation() {
-    for (let i = 0; i < this._population.length - 1; i++) {
+    const notMutable = Math.trunc(0.25 * this._population.length);
+    for (let i = 0; i < this._population.length - notMutable; i++) {
       this._population[i].brain.mutate(this._mutationRate);
     }
   }
@@ -283,5 +298,6 @@ class GameController {
       probability += this._probabilities[i - 1];
       this._probabilities.push(probability);
     }
+    console.log(this._probabilities);
   }
 }
