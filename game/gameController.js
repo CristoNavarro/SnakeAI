@@ -298,6 +298,6 @@ class GameController {
       probability += this._probabilities[i - 1];
       this._probabilities.push(probability);
     }
-    console.log(this._probabilities);
+    //console.log(this._probabilities);
   }
 }
