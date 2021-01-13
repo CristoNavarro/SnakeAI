@@ -14,14 +14,14 @@ const GENERATIONS_TO_SHOW = 5;
 function setup() {
   const canvasWidth = 900;
   const canvasHeight = 900; 
-  const cellsPerRow = 8;
-  const cellsPerCol = 8;
+  const cellsPerRow = 9;
+  const cellsPerCol = 9;
   frameRate(40);
   tf.setBackend('cpu');
   createCanvas(canvasWidth, canvasHeight);
   background('black');
   game = new GameController(cellsPerRow, cellsPerCol, canvasWidth, canvasHeight);
-  game.configureStart(200, [4], 2, 0.3, 0.3);
+  game.configureStart(200, [12], 2, 0.3, 0.3);
   //game.gameCicle();
 }
 

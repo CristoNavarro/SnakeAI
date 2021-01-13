@@ -144,47 +144,44 @@ class GameBoard {
   }
 
   lookInDirection(horizontal, vertical) {
-    let result = [0, 0, 0]; //{food: 0, body: 0, wall: 0}
-    //let result = [0];
+    let result = [0, 0, 0]; //{inmediate danger, 1 / distance, food}
     let i = this._head.x + horizontal;
     let j = this._head.y + vertical;
     if (this.board[i][j] === CELL_TYPE.SNAKE || this.board[i][j] === CELL_TYPE.WALL) {
-      return [1]
+      result[0] = 1
     }
     else {
-      return [0];
+      result[0] = 0;
     }
-    //let distance = 1;
-    ///*if (this.board[i][j] === CELL_TYPE.SNAKE || this.board[i][j] === CELL_TYPE.WALL) {
-    //  result[1] = 1;
-    //}*/
-    //let value;
-    //let bodyFound = false;
-    //let foodFound = false;
-    //let dangerFound = false;
-    //do {
-    //  value = this.board[i][j];
-    //  if (!bodyFound && value === CELL_TYPE.SNAKE) {
-    //    /*if (!dangerFound && distance === 1) {
-    //      dangerFound = true;
-    //      result[3] = 1;
-    //    }*/
-    //    bodyFound = true;
-    //    result[1] = 1;
-    //  }
-    //  if (!foodFound && value === CELL_TYPE.FOOD) {
-    //    foodFound = true;
-    //    result[0] = 1;
-    //  }
-    //  i += horizontal;
-    //  j += vertical;
-    //  distance++;
-    //} while(value !== CELL_TYPE.WALL);
-    ///*if (!dangerFound && distance === 1) {
-    //  dangerFound = true;
-    //  result[3] = 1;
-    //}*/
+    let distance = 1;
+    let value;
+    let bodyFound = false;
+    let foodFound = false;
+    let dangerFound = false;
+    do {
+      value = this.board[i][j];
+      //if (!bodyFound && value === CELL_TYPE.SNAKE) {
+      //  /*if (!dangerFound && distance === 1) {
+      //    dangerFound = true;
+      //    result[3] = 1;
+      //  }*/
+      //  bodyFound = true;
+      //  result[1] = 1 / distance;
+      //}
+      if (!foodFound && value === CELL_TYPE.FOOD) {
+        foodFound = true;
+        result[2] = 1 / distance;
+      }
+      i += horizontal;
+      j += vertical;
+      distance++;
+    } while(value !== CELL_TYPE.WALL && value !== CELL_TYPE.SNAKE);
+    /*if (!dangerFound && distance === 1) {
+      dangerFound = true;
+      result[3] = 1;
+    }*/
     //result[2] = 1 / distance;
-    //return result;
+    result[1] = 1 / distance;
+    return result;
   }
 };
