@@ -16,6 +16,7 @@ class GameController {
     this._firstGenerationCreated = false;
     this._ordered = false;
     this._maxIterationsPerSnake = this._cellsPerCol * this._cellsPerRow / 4;
+    this._foodDispenser = new FoodDispenser(this._cellsPerCol, this._cellsPerRow, this._initialPos)
   }
 
   get currentGeneration() {
@@ -24,7 +25,7 @@ class GameController {
 
   configureStart(snakePopulation = 10, hiddenLayersNodes = [8], selectivePreassure = 1.5, numberOfPairs = 0.2, mutationRate = 0.2) {
     this._mutationRate = mutationRate
-    const INPUTS_AMOUNT = 12;
+    const INPUTS_AMOUNT = 8;
     const OUTPUT_AMOUNT = 4;
     this._population = [];
     this._probabilities = [];
@@ -32,7 +33,8 @@ class GameController {
     for (let i = 0; i < snakePopulation; i++) {
       let snake = new Snake(this._initialPos, this._growthByFood, this._maxIterationsPerSnake);
       let brain = new NeuralNetwork(INPUTS_AMOUNT, hiddenLayersNodes, OUTPUT_AMOUNT);
-      let food = new Food(this._cellsPerCol, this._cellsPerRow, snake);
+      //let food = new Food(this._cellsPerCol, this._cellsPerRow, snake);
+      let food = this._foodDispenser.getFood(snake);
       this._population.push({snake: snake, brain: brain, food: food});
     }
     this._createProbabilities(selectivePreassure);
@@ -74,10 +76,14 @@ class GameController {
       // Ordenar
       this._currentGeneration++;
       this._orderGeneration();
-      /*console.log("motrando ordenado");
+      console.log("motrando ordenado");
+      let fit = 0;
       for (let population of this._population) {
-        console.log(`${population.snake.score} points and ${population.snake.iterationsAlive} time`);
-      }*/
+        fit += population.snake._calculateFitness()
+        //console.log(`${population.snake.score} points and ${population.snake.iterationsAlive} time || Fit: ${population.snake._calculateFitness()}`);
+      }
+      console.log(`Overall Fitness: ${Math.round(fit / this._population.length * 100) / 100}`);
+      //console.log(`${this._population[this._population.length - 1].snake.score} points and ${this._population[this._population.length - 1].snake.iterationsAlive} time (${this._population[this._population.length - 1].snake.fit})`);
       // Seleccionar parejas
       let pairs = this._selectParents();
       // Generar hijos
@@ -96,8 +102,9 @@ class GameController {
 
   _resetIndividuals() {
     for (let i = 0; i < this._population.length; i++) {
-      let food = new Food(this._cellsPerCol, this._cellsPerRow, this._population[i].snake);
+      //let food = new Food(this._cellsPerCol, this._cellsPerRow, this._population[i].snake);
       let snake = new Snake(this._initialPos, this._growthByFood, this._maxIterationsPerSnake);
+      let food = this._foodDispenser.getFood(snake);
       this._population[i].food = food;
       this._population[i].snake = snake;
       this._population[i].brain = this._population[i].brain.copy();
@@ -238,7 +245,8 @@ class GameController {
       let childBrain = this._population[pair[0]].brain.breed(this._population[pair[1]].brain);
       //childBrain.mutate();
       let childSnake = new Snake(this._initialPos, this._growthByFood, this._maxIterationsPerSnake);
-      let childFood = new Food(this._cellsPerCol, this._cellsPerRow, childSnake);
+      //let childFood = new Food(this._cellsPerCol, this._cellsPerRow, childSnake);
+      let childFood = this._foodDispenser.getFood(childSnake);
       offspring.push({snake: childSnake, food: childFood, brain: childBrain});
     }
     return offspring;
@@ -274,7 +282,8 @@ class GameController {
     if (nextPoint.equals(food.currentPos)) {
       snakeGrows = true;
       snake.move(snakeGrows);
-      individual.food = new Food(this._cellsPerCol, this._cellsPerRow, snake);
+      individual.food = this._foodDispenser.getFood(snake);
+      //individual.food = new Food(this._cellsPerCol, this._cellsPerRow, snake);
     } else if (snake.insideBody(nextPoint)) {
       //console.log("Game Over");
       //snake._score = snake.score - 0.5; 

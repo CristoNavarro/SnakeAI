@@ -93,7 +93,7 @@ class Snake {
   move(grow) {
     this._iterationsNoFood++;
     this.body.unshift(this._nextPoint);
-    grow = true;
+    //grow = true;
     if (grow) {
       this._remainingIncrease += this._increaseSize;
       this._score++;
@@ -137,7 +137,11 @@ class Snake {
     } else {
       return this.iterationsAlive * Math.pow(2, 10) * (this.score - 9);
     }*/
-    return this.iterationsAlive;
+    if (this.iterationsAlive >= this._maxIterationsWithoutFood) {
+      return this._score + 1;
+    } else {
+      return this._score + this._maxIterationsWithoutFood / (this._maxIterationsWithoutFood - this.iterationsAlive);
+    }
   }
 
   setMovement(direction, food) {
