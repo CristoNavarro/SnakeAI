@@ -76,7 +76,7 @@ class GameController {
       // Ordenar
       this._currentGeneration++;
       this._orderGeneration();
-      console.log("motrando ordenado");
+      //console.log("motrando ordenado");
       let fit = 0;
       for (let population of this._population) {
         fit += population.snake._calculateFitness()
@@ -213,11 +213,11 @@ class GameController {
       let i = 0;
       let j = 0;
       for (i = 0; i < this._population.length; i++) {
-        if (randomNumber <= this._probabilities[i] && !alreadySelected.includes(i)) {
+        if (randomNumber <= this._probabilities[i]) {
           newPair.push(i);
           randomNumber = Math.random() * this._probabilities[this._probabilities.length - 1];
           for (j = 0; j < this._population.length; j++) {
-            if (randomNumber <= this._probabilities[j] && !alreadySelected.includes(j)) {
+            if (randomNumber <= this._probabilities[j]) {
               newPair.push(j);
               break;
             }

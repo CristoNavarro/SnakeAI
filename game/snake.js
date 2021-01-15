@@ -140,7 +140,7 @@ class Snake {
     if (this.iterationsAlive >= this._maxIterationsWithoutFood) {
       return this._score + 1;
     } else {
-      return this._score + this._maxIterationsWithoutFood / (this._maxIterationsWithoutFood - this.iterationsAlive);
+      return this._score + this.iterationsAlive / this._maxIterationsWithoutFood;
     }
   }
 
