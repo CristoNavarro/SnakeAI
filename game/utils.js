@@ -11,7 +11,7 @@ const CELL_TYPE = {
   EMPTY: 'black',
   SNAKE: 'white',
   HEAD: 'green',
-  FOOD: 'red',
+  FOOD: 'black',
   WALL: 'gray'
 }
 

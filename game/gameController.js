@@ -24,7 +24,7 @@ class GameController {
 
   configureStart(snakePopulation = 10, hiddenLayersNodes = [8], selectivePreassure = 1.5, numberOfPairs = 0.2, mutationRate = 0.2) {
     this._mutationRate = mutationRate
-    const INPUTS_AMOUNT = 12;
+    const INPUTS_AMOUNT = 8;
     const OUTPUT_AMOUNT = 4;
     this._population = [];
     this._probabilities = [];
@@ -61,12 +61,12 @@ class GameController {
 
   computeNGenerations(numberOfGenerations) {
     for (let i = 0; i < numberOfGenerations; i++) {
-      this.nextGeneration();
+      this.nextGeneration(i === (numberOfGenerations - 1));
     }
   }
 
   // TODO, crear de verdad la nueva generación
-  nextGeneration() {
+  nextGeneration(show = false) {
     if (!this._firstGenerationCreated) {
       this._evaluateGeneration();
       this._firstGenerationCreated = true;
@@ -74,10 +74,11 @@ class GameController {
       // Ordenar
       this._currentGeneration++;
       this._orderGeneration();
-      /*console.log("motrando ordenado");
-      for (let population of this._population) {
-        console.log(`${population.snake.score} points and ${population.snake.iterationsAlive} time`);
-      }*/
+      if (show) {
+        console.log("motrando ordenado");
+        for (let population of this._population)
+          console.log(`${population.snake.score} points and ${population.snake.iterationsAlive} time`);
+      }
       // Seleccionar parejas
       let pairs = this._selectParents();
       // Generar hijos
@@ -206,11 +207,11 @@ class GameController {
       let i = 0;
       let j = 0;
       for (i = 0; i < this._population.length; i++) {
-        if (randomNumber <= this._probabilities[i] && !alreadySelected.includes(i)) {
+        if (randomNumber <= this._probabilities[i]) { //&& !alreadySelected.includes(i)) {
           newPair.push(i);
           randomNumber = Math.random() * this._probabilities[this._probabilities.length - 1];
           for (j = 0; j < this._population.length; j++) {
-            if (randomNumber <= this._probabilities[j] && !alreadySelected.includes(j)) {
+            if (randomNumber <= this._probabilities[j]) { //&& !alreadySelected.includes(j)) {
               newPair.push(j);
               break;
             }
@@ -245,7 +246,7 @@ class GameController {
   }
 
   _mutatePopulation() {
-    const notMutable = Math.trunc(0.25 * this._population.length);
+    const notMutable = Math.trunc(0.05 * this._population.length);
     for (let i = 0; i < this._population.length - notMutable; i++) {
       this._population[i].brain.mutate(this._mutationRate);
     }
