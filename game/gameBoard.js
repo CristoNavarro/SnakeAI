@@ -62,7 +62,7 @@ class GameBoard {
   }
 
   _setFood(food) {
-    this.board[food.x][food.y] = CELL_TYPE.FOOD;
+    //this.board[food.x][food.y] = CELL_TYPE.FOOD;
     this._food = new Point(food.x, food.y);
   }
 

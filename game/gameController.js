@@ -65,6 +65,21 @@ class GameController {
     }
   }
 
+  forDataComputeNGenerations(maxFor36 = 200, maxForMoreThan36 = 400) {
+    let score = 0;
+    while (score < 37 && this._currentGeneration < maxFor36) {
+      this.nextGeneration();
+      score = this.getBestSnake().score
+    }
+    console.log(`Ha llegado a ${score} con ${this._currentGeneration}`);
+    while (score <= 37 && this._currentGeneration < maxForMoreThan36) {
+      this.nextGeneration();
+      score = this.getBestSnake().score
+    }
+    console.log(`Ha llegado a ${score} con ${this._currentGeneration}`);
+    
+  }
+
   // TODO, crear de verdad la nueva generación
   nextGeneration(show = false) {
     if (!this._firstGenerationCreated) {

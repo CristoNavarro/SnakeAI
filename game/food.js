@@ -29,7 +29,10 @@ class Food {
 
   selectNewPosition(snake) {
     let newPoint = new Point(this._maxXPosition, this._maxYPosition, true);
-    while(snake.insideBody(newPoint) || this.onWall(newPoint)) {
+    /*while(snake.insideBody(newPoint) || this.onWall(newPoint)) {
+      newPoint = new Point(this._maxXPosition, this._maxYPosition, true);
+    }*/
+    while(this.onWall(newPoint)) {
       newPoint = new Point(this._maxXPosition, this._maxYPosition, true);
     }
     this._currentPos = newPoint;
