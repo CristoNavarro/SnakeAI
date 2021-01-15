@@ -21,7 +21,7 @@ function setup() {
   createCanvas(canvasWidth, canvasHeight);
   background('black');
   game = new GameController(cellsPerRow, cellsPerCol, canvasWidth, canvasHeight);
-  game.configureStart(200, [4, 4], 2, 0.6, 0.5);
+  game.configureStart(200, [4], 2, 0.6, 0.3);
   //game.gameCicle();
 }
 
