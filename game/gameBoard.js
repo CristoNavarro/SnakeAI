@@ -148,10 +148,12 @@ class GameBoard {
     let i = this._head.x + horizontal;
     let j = this._head.y + vertical;
     if (this.board[i][j] === CELL_TYPE.SNAKE || this.board[i][j] === CELL_TYPE.WALL) {
-      result[0] = 1
+      //result[0] = 1
+      return [1];
     }
     else {
-      result[0] = 0;
+      //result[0] = 0;
+      return[0];
     }
     let distance = 1;
     let value;

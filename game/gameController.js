@@ -24,7 +24,7 @@ class GameController {
 
   configureStart(snakePopulation = 10, hiddenLayersNodes = [8], selectivePreassure = 1.5, numberOfPairs = 0.2, mutationRate = 0.2) {
     this._mutationRate = mutationRate
-    const INPUTS_AMOUNT = 8;
+    const INPUTS_AMOUNT = 4;
     const OUTPUT_AMOUNT = 4;
     this._population = [];
     this._probabilities = [];
