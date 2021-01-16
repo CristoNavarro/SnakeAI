@@ -86,8 +86,8 @@ class GameBoard {
     const LEFT_DOWN = [-1, 1];
     const RIGHT_UP = [1, -1];
     const RIGHT_DOWN = [1, 1];
-    //const LOOK_DIRECTIONS = [LEFT, RIGHT, UP, DOWN, LEFT_UP, LEFT_DOWN, RIGHT_UP, RIGHT_DOWN];
-    const LOOK_DIRECTIONS = [LEFT, UP, RIGHT, DOWN];
+    const LOOK_DIRECTIONS = [LEFT, RIGHT, UP, DOWN, LEFT_UP, LEFT_DOWN, RIGHT_UP, RIGHT_DOWN];
+    //const LOOK_DIRECTIONS = [LEFT, UP, RIGHT, DOWN];
     for (let direction of LOOK_DIRECTIONS) {
       result = result.concat(this.lookInDirection(...direction));
     }
@@ -144,16 +144,17 @@ class GameBoard {
   }
 
   lookInDirection(horizontal, vertical) {
-    let result = [0, 0]; //{inmediate danger, food, 1 / distance}
+    //let result = [0, 0, 0]; //{inmediate danger, food, 1 / distance}
+    let result = [0, 0]; //{ 1 / distance, food}
     let i = this._head.x + horizontal;
     let j = this._head.y + vertical;
-    if (this.board[i][j] === CELL_TYPE.SNAKE || this.board[i][j] === CELL_TYPE.WALL) {
+    /*if (this.board[i][j] === CELL_TYPE.SNAKE || this.board[i][j] === CELL_TYPE.WALL) {
       result[0] = 1
     }
     else {
       result[0] = 0;
-    }
-    let distance = 1;
+    }*/
+    let distance = 0;
     let value;
     let bodyFound = false;
     let foodFound = false;
@@ -180,7 +181,7 @@ class GameBoard {
       dangerFound = true;
       result[3] = 1;
     }*/
-    //result[2] = 1 / distance;
+    result[0] = 1 / distance;
     return result;
   }
 };

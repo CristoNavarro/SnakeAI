@@ -15,7 +15,7 @@ class GameController {
     this._gameBoard = new GameBoard(cellsPerRow, cellsPerCol, canvasWidth, canvasHeight);
     this._firstGenerationCreated = false;
     this._ordered = false;
-    this._maxIterationsPerSnake = this._cellsPerCol * this._cellsPerRow / 4;
+    this._maxIterationsPerSnake = this._cellsPerCol * this._cellsPerRow / 1.5;
     this._foodDispenser = new FoodDispenser(this._cellsPerCol, this._cellsPerRow, this._initialPos)
   }
 
@@ -25,7 +25,7 @@ class GameController {
 
   configureStart(snakePopulation = 10, hiddenLayersNodes = [8], selectivePreassure = 1.5, numberOfPairs = 0.2, mutationRate = 0.2) {
     this._mutationRate = mutationRate
-    const INPUTS_AMOUNT = 8;
+    const INPUTS_AMOUNT = 16;
     const OUTPUT_AMOUNT = 4;
     this._population = [];
     this._probabilities = [];
@@ -82,7 +82,7 @@ class GameController {
         fit += population.snake._calculateFitness()
         //console.log(`${population.snake.score} points and ${population.snake.iterationsAlive} time || Fit: ${population.snake._calculateFitness()}`);
       }
-      console.log(`Overall Fitness: ${Math.round(fit / this._population.length * 100) / 100}`);
+      //console.log(`Overall Fitness: ${Math.round(fit / this._population.length * 100) / 100}`);
       //console.log(`${this._population[this._population.length - 1].snake.score} points and ${this._population[this._population.length - 1].snake.iterationsAlive} time (${this._population[this._population.length - 1].snake.fit})`);
       // Seleccionar parejas
       let pairs = this._selectParents();

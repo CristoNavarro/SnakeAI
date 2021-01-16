@@ -11,12 +11,12 @@ class FoodDispenser {
   }
 
   getFood(snake) {
-    let score = snake.score;
+    /*let score = snake.score;
     for (let i = score - 1; i < this._foodSet.length; i++) {
       if (!snake.insideBody(this._foodSet[i].currentPos)) {
         return this._foodSet[i];
       }
-    }
+    }*/
     let newFood = new Food(this._maxXPosition, this._maxXPosition, snake);
     this._foodSet.push(newFood);
     return newFood;
