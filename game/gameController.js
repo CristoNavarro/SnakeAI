@@ -17,6 +17,8 @@ class GameController {
     this._ordered = false;
     this._maxIterationsPerSnake = this._cellsPerCol * this._cellsPerRow / 1.5;
     this._foodDispenser = new FoodDispenser(this._cellsPerCol, this._cellsPerRow, this._initialPos)
+    this._maxScore = 0;
+    this._reached = false;
   }
 
   get currentGeneration() {
@@ -25,7 +27,7 @@ class GameController {
 
   configureStart(snakePopulation = 10, hiddenLayersNodes = [8], selectivePreassure = 1.5, numberOfPairs = 0.2, mutationRate = 0.2) {
     this._mutationRate = mutationRate
-    const INPUTS_AMOUNT = 16;
+    const INPUTS_AMOUNT = 24;
     const OUTPUT_AMOUNT = 4;
     this._population = [];
     this._probabilities = [];
@@ -45,6 +47,7 @@ class GameController {
     let maxScore = 0;
     let score = 0;
     while (score < 10 && this._currentGeneration < maxGenerations) {
+      console.log(this._currentGeneration);
       this.nextGeneration();
       score = this.getBestSnake().score
       if (score > maxScore) {
@@ -84,8 +87,17 @@ class GameController {
 
   computeNGenerations(numberOfGenerations) {
     for (let i = 0; i < numberOfGenerations; i++) {
+      let score = this.getBestSnake().score;
+      if (score >= 10 && !this._reached) {
+        this._reached = true;
+        console.log(`LLega a 10 puntos en ${this._currentGeneration} generaciones`)
+      }
+      if (score > this._maxScore) {
+        this._maxScore = score;
+      }
       this.nextGeneration();
     }
+    console.log(`Puntuacion maxima: ${this._maxScore}`)
   }
 
   // TODO, crear de verdad la nueva generación

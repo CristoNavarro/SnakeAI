@@ -21,14 +21,14 @@ function setup() {
   createCanvas(canvasWidth, canvasHeight);
   background('black');
   game = new GameController(cellsPerRow, cellsPerCol, canvasWidth, canvasHeight);
-  game.configureStart(200, [16], 2, 0.6, 0.3);
+  game.configureStart(200, [24, 24], 2, 0.6, 0.3);
   //game.gameCicle();
 }
 
 function draw() {
   if (!bestSnake) {
-    //game.computeNGenerations(GENERATIONS_TO_SHOW);
-    game.forDataComputeNGenerations();
+    game.computeNGenerations(GENERATIONS_TO_SHOW);
+    //game.forDataComputeNGenerations();
     bestSnake = game.getBestSnake();
     currentSnake = new Snake(bestSnake.initialPoint, bestSnake.increaseSize, bestSnake.maxIterationsWithoutFood);
     moveIndex = 0;

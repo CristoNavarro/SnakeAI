@@ -107,14 +107,14 @@ class NeuralNetwork {
     const hiddenLayer = tf.layers.dense({
       units: this._hiddenNodes[0],
       inputShape: [this._inputNodes],
-      activation: 'relu'
+      activation: 'linear'
     });
     model.add(hiddenLayer);
     for (let i = 1; i < this._hiddenNodes.length; i++) {
       const hiddenLayer = tf.layers.dense({
         units: this._hiddenNodes[i],
         inputShape: [this._hiddenNodes[i - 1]],
-        activation: 'sigmoid'
+        activation: 'linear'
       });
       model.add(hiddenLayer);
     }
