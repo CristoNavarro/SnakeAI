@@ -144,16 +144,16 @@ class GameBoard {
   }
 
   lookInDirection(horizontal, vertical) {
-    //let result = [0, 0, 0]; //{inmediate danger, food, 1 / distance}
-    let result = [0, 0]; //{ 1 / distance, food}
+    let result = [0, 0, 0]; //{inmediate danger, food, 1 / distance}
+    //let result = [0, 0]; //{ 1 / distance, food}
     let i = this._head.x + horizontal;
     let j = this._head.y + vertical;
-    /*if (this.board[i][j] === CELL_TYPE.SNAKE || this.board[i][j] === CELL_TYPE.WALL) {
+    if (this.board[i][j] === CELL_TYPE.SNAKE || this.board[i][j] === CELL_TYPE.WALL) {
       result[0] = 1
     }
     else {
       result[0] = 0;
-    }*/
+    }
     let distance = 0;
     let value;
     let bodyFound = false;
@@ -181,7 +181,7 @@ class GameBoard {
       dangerFound = true;
       result[3] = 1;
     }*/
-    result[0] = 1 / distance;
+    result[2] = 1 / distance;
     return result;
   }
 };

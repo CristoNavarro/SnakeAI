@@ -25,7 +25,7 @@ class GameController {
 
   configureStart(snakePopulation = 10, hiddenLayersNodes = [8], selectivePreassure = 1.5, numberOfPairs = 0.2, mutationRate = 0.2) {
     this._mutationRate = mutationRate
-    const INPUTS_AMOUNT = 16;
+    const INPUTS_AMOUNT = 24;
     const OUTPUT_AMOUNT = 4;
     this._population = [];
     this._probabilities = [];
@@ -103,7 +103,7 @@ class GameController {
         fit += population.snake._calculateFitness()
         //console.log(`${population.snake.score} points and ${population.snake.iterationsAlive} time || Fit: ${population.snake._calculateFitness()}`);
       }
-      //console.log(`Max Score: ${this._population[this._population.length - 1].snake.score}`)
+      console.log(`Max Score: ${this._population[this._population.length - 1].snake.score}`)
       //console.log(`Overall Fitness: ${Math.round(fit / this._population.length * 100) / 100}`);
       //console.log(`${this._population[this._population.length - 1].snake.score} points and ${this._population[this._population.length - 1].snake.iterationsAlive} time (${this._population[this._population.length - 1].snake.fit})`);
       // Seleccionar parejas
