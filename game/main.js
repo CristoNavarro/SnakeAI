@@ -14,8 +14,8 @@ const GENERATIONS_TO_SHOW = 10;
 function setup() {
   const canvasWidth = 900;
   const canvasHeight = 900; 
-  const cellsPerRow = 15;
-  const cellsPerCol = 15;
+  const cellsPerRow = 10;
+  const cellsPerCol = 10;
   frameRate(80);
   tf.setBackend('cpu');
   createCanvas(canvasWidth, canvasHeight);
@@ -27,7 +27,8 @@ function setup() {
 
 function draw() {
   if (!bestSnake) {
-    game.computeNGenerations(GENERATIONS_TO_SHOW);
+    //game.computeNGenerations(GENERATIONS_TO_SHOW);
+    game.forDataComputeNGenerations();
     bestSnake = game.getBestSnake();
     currentSnake = new Snake(bestSnake.initialPoint, bestSnake.increaseSize, bestSnake.maxIterationsWithoutFood);
     moveIndex = 0;

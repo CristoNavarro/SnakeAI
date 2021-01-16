@@ -41,6 +41,27 @@ class GameController {
     this._currentGeneration = 1;
   }
 
+  forDataComputeNGenerations(maxGenerations = 400) {
+    let maxScore = 0;
+    let score = 0;
+    while (score < 10 && this._currentGeneration < maxGenerations) {
+      this.nextGeneration();
+      score = this.getBestSnake().score
+      if (score > maxScore) {
+        maxScore = score;
+      }
+    }
+    console.log(`Ha llegado a ${score} puntos con ${this._currentGeneration} generaciones`);
+    while (this._currentGeneration < maxGenerations) {
+      this.nextGeneration();
+      score = this.getBestSnake().score
+      if (score > maxScore) {
+        maxScore = score;
+      }
+    }
+    console.log(`Puntuacion maxima con ${this._currentGeneration} generaciones: ${maxScore} puntos`);
+  }
+
   gameCicle() {
     let stillAlive = false;
     if (this._population[0].snake.alive) {
@@ -82,6 +103,7 @@ class GameController {
         fit += population.snake._calculateFitness()
         //console.log(`${population.snake.score} points and ${population.snake.iterationsAlive} time || Fit: ${population.snake._calculateFitness()}`);
       }
+      //console.log(`Max Score: ${this._population[this._population.length - 1].snake.score}`)
       //console.log(`Overall Fitness: ${Math.round(fit / this._population.length * 100) / 100}`);
       //console.log(`${this._population[this._population.length - 1].snake.score} points and ${this._population[this._population.length - 1].snake.iterationsAlive} time (${this._population[this._population.length - 1].snake.fit})`);
       // Seleccionar parejas
