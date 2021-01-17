@@ -88,16 +88,16 @@ class GameController {
   computeNGenerations(numberOfGenerations) {
     for (let i = 0; i < numberOfGenerations; i++) {
       let score = this.getBestSnake().score;
-      if (score >= 10 && !this._reached) {
+      /*if (score >= 10 && !this._reached) {
         this._reached = true;
         console.log(`LLega a 10 puntos en ${this._currentGeneration} generaciones`)
-      }
+      }*/
       if (score > this._maxScore) {
         this._maxScore = score;
       }
       this.nextGeneration();
     }
-    console.log(`Puntuacion maxima: ${this._maxScore}`)
+    //console.log(`Puntuacion maxima: ${this._maxScore}`)
   }
 
   // TODO, crear de verdad la nueva generación
@@ -169,7 +169,9 @@ class GameController {
   }
 
   draw(snake, food) {
-    this._gameBoard.setCurrentStatus(snake, food);
+    if (snake && food) {
+      this._gameBoard.setCurrentStatus(snake, food);
+    }
     this._gameBoard.draw();
   }
 
